@@ -57,7 +57,7 @@ public:
   virtual void BFSStart() {}
   virtual void BFSPreprocessNode(int n) {}
   virtual void BFSProcessEdge(Edge& edge) {}
-  virtual void BFSPostProcessNode(int n) {}
+  virtual void BFSPostprocessNode(int n) {}
   virtual void BFSEnd() {}
 
   void DFSTraverse(int source) {

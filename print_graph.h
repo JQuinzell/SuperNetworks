@@ -26,7 +26,7 @@ public:
          << endl;
   }
 
-  void BFSPostProcessNode(int n) {
+  void BFSPostprocessNode(int n) {
     cout << "Processed edge: " << n << endl;
   }
 
