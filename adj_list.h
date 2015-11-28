@@ -30,6 +30,7 @@ public:
     int to;
     int weight;
     int num_edges;
+    int id = 0;
 
     infile >> num_edges;
     infile >> num_vertices;
@@ -42,7 +43,9 @@ public:
       infile >> from;
       infile >> to;
       infile >> weight;
-      addEdge(Edge(from, to, weight));
+      Edge edge = Edge(from, to, weight);
+      edge.id = id++;
+      addEdge(edge);
     }
 
     infile.close();

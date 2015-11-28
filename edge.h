@@ -6,6 +6,7 @@ struct Edge
   int from;
   int to;
   int weight;
+  int id;
 
   Edge(int u, int v, int w) {
     from = u;
