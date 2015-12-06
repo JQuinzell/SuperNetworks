@@ -7,11 +7,13 @@ struct Edge
   int to;
   int weight;
   int id;
+  int flow;
 
-  Edge(int u, int v, int w) {
+  Edge(int u, int v, int w=0) {
     from = u;
     to = v;
     weight = w;
+    flow = 0;
   }
 };
 

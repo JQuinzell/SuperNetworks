@@ -59,5 +59,9 @@ public:
   void DFSEnd() {
     cout << "And cut" << endl;
   }
+  
+  void PrintMaxFlow(AdjacencyList list, int source, int destination){
+  	cout << "Max Flow: " << list.Max_Flow(source, destination) << endl;
+  }
 };
 #endif

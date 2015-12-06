@@ -13,10 +13,20 @@ private:
   bool* visited;
 
 public:
+	int max_flow;
   Graph(const char* filename):
     list(filename)
   {
     size = list.size();
+    max_flow = 0;
+  }
+  
+  Graph(int n): list(n) {
+  	max_flow = 0;
+  }
+  
+  void addEdge(Edge edge){
+  	list.addEdge(edge);
   }
 
   void BFSTraverse(int source) {
@@ -90,7 +100,9 @@ public:
   virtual void DFSPreprocessNode(int n) {}
   virtual void DFSProcessEdge(Edge& edge) {}
   virtual void DFSPostprocessNode(int n) {}
-  virtual void DFSEnd() {}
+  virtual void DFSEnd() {}  
+  
+  virtual void PrintMaxFlow(AdjacencyList list, int source, int destination);
 };
 
 #endif
