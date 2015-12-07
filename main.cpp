@@ -165,7 +165,7 @@ void parser(const char* infile)
 	out << tot_edges << " " << tot_nodes << endl;
 
 	// Search file for edges
-	while (kdl >> word);
+	while (kdl >> word)
 	{
 		if (word == "edge")
 		{
