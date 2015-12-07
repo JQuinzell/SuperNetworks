@@ -27,7 +27,17 @@ queue<string> priorityRecovery(Graph G, int S, int T);
 
 int main()
 {
+	Graph G(4);
+	
+	G.addEdge(Edge(0, 1, 5));
+	G.addEdge(Edge(0, 2, 7));
+	G.addEdge(Edge(1, 2, 6));
+	G.addEdge(Edge(1, 3, 8));
+	G.addEdge(Edge(2, 3, 9));
 
+	G = maxFlow(G, 0, 3);
+	cout << "Max Flow: " << G.max_flow << endl;
+	
 	return 0;
 }
 
