@@ -182,7 +182,7 @@ queue<string> priorityRecovery(Graph H, int S, int T)
 			// TODO: repair time of nodes?
 
 			// Compare value of flow over repair time
-			int value = maxFlowVal(N, S, T) - maxFlowVal(curr, S, T) / work_time;
+			int value = (maxFlowVal(N, S, T) - maxFlowVal(curr, S, T)) / work_time;
 			if (max_val < value)
 			{
 				max_val = value;
