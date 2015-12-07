@@ -36,7 +36,7 @@ class Path
 			for (std::vector<Edge>::reverse_iterator i = edges.rbegin(); i != edges.rend(); ++i)
 			{
 				Edge e = *i;
-				cout << e.from << " -> " << e.to << " | ";
+				cout << e.from.id << " -> " << e.to.id << " | ";
 			}
 			cout << endl;
 		}
