@@ -16,6 +16,7 @@ private:
 	bool finish_dfs;
 
 public:
+	std::vector<Node> nodes;
 	std::vector<Edge> edges;
 	std::vector<std::vector<Edge> > vertices;
 	int num_vertices;
@@ -26,6 +27,10 @@ public:
 	
 	AdjacencyList(int n): vertices(n){
 		num_vertices = n;
+		for(int i = 0; i < num_vertices; i++){
+			Node new_n(i);
+			nodes.push_back(new_n);
+		}
 	}
 	
 	AdjacencyList& operator=(const AdjacencyList l){
@@ -53,15 +58,20 @@ public:
 
 		infile >> num_edges;
 		infile >> num_vertices;
+		
+		for(int i = 0; i < num_vertices; i++){
+			Node new_n(i);
+			nodes.push_back(new_n);
+		}
 
 		vertices = std::vector<std::vector<Edge> >(num_vertices);
 
 		for (int i = 0; i < num_edges; ++i)
 		{
-		weight = (rand()%10)+1;
+			weight = (rand()%10)+1;
 			infile >> from;
 			infile >> to;
-			Edge edge = Edge(from, to, weight);
+			Edge edge = Edge(Node[from], Node[to], weight);
 			addEdge(edge);
 		}
 
@@ -71,7 +81,7 @@ public:
 	Path calculatePath(int S, int T){
 		Path path;
 
-		//DFS
+		//START DFS
 
 		int size = vertices.size();
 		visited = new bool(size);
@@ -99,7 +109,6 @@ public:
 		for(auto i = vertices[node].begin(); i != vertices[node].end(); ++i) {
 			Edge edge = *i;
 			parent[edge.from] = node;
-			// edge.print();
 
 			if(edge.to == T){
 				finish_dfs = true;
@@ -121,24 +130,11 @@ public:
 		edges.push_back(edge);
 	}
 
- // int size() { return num_vertices; }
-
 	/*
 		Access edges from a specific vertex
 	*/
 	std::vector<Edge>& operator[](const int i) {
 		return vertices[i];
-	}
-	
-	bool isPath(int source, int destination)
-	{
-		Edge edge = vertices[source].back();
-		if(edge.to != destination && !vertices[edge.to].empty())
-			return isPath(edge.to, destination);
-		else{
-			return true;
-		}
-		return false;
 	}
 };
 
