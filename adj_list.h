@@ -100,14 +100,14 @@ public:
 		for(auto i = vertices[node].begin(); i != vertices[node].end(); ++i) {
 			Edge edge = *i;
 			parent[edge.from] = node;
-
+//			cout << "super saiyan" << endl;
 			if(edge.from == T)
 				finish_dfs = true;
 
 			if(!finish_dfs && !visited[edge.from])
 				DFSVisit(edge.to, T, p);
 
-			else{
+			else if(finish_dfs){
 				p.addEdge(edge);
 				break;
 			}

@@ -44,11 +44,11 @@ Graph maxFlow(Graph& G, int S, int T)
 	int curr_path_flow = 0;
 
 	Graph Gf = residualNet(G);
+	curr_path = Gf.list.calculatePath(S,T);
 	
-	while(pathExists(Gf,S,T)){
+	while(!curr_path.edges.empty()){
 		lf = Gf.list;
 		nodes = lf.vertices;
-		curr_path = Gf.list.calculatePath(S,T);
 		G.paths.push_back(curr_path);
 		curr_path_flow = minWeight(curr_path.edges);
 		G.max_flow += curr_path_flow;
@@ -61,8 +61,10 @@ Graph maxFlow(Graph& G, int S, int T)
 				curr_edge.flow = rev_edge.flow - curr_path_flow;
 			}
 		}
-		Gf = residualNet(Gf);			
+		Gf = residualNet(Gf);
+		curr_path = Gf.list.calculatePath(S,T);			
 	}
+	cout << "end" << endl;
 	Gf.max_flow = G.max_flow;
 	return G;
 }
@@ -70,12 +72,9 @@ Graph maxFlow(Graph& G, int S, int T)
 Graph residualNet(Graph &G)
 {
 	Graph Gf(G.list.num_vertices);
-	Edge curr_edge;
 	
-	for(int i = 0; i < G.list.num_vertices; i++){
-		while(!G.list.vertices[i].empty()){
-			curr_edge = G.list.vertices[i].back();
-			G.list.vertices[i].pop_back();
+	for(auto node : G.list.vertices){
+		for(Edge curr_edge : node){
 			Edge residual(curr_edge.from, curr_edge.to, (curr_edge.weight - curr_edge.flow));
 			if(residual.weight != 0){
 				residual.flow = curr_edge.flow;
@@ -88,7 +87,6 @@ Graph residualNet(Graph &G)
 			}
 		}
 	}
-	
 	return Gf;
 }
 	
