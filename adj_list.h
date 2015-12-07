@@ -96,19 +96,20 @@ public:
 
 	void DFSVisit(int node, int T, Path& p) {
 		visited[node] = true;
-
+		if(node == T) {
+			finish_dfs = true;
+			return;
+		}
 		for(auto i = vertices[node].begin(); i != vertices[node].end(); ++i) {
 			Edge edge = *i;
 			parent[edge.from] = node;
-//			cout << "super saiyan" << endl;
-			if(edge.from == T)
-				finish_dfs = true;
+			// cout << "(" << edge.from << ", " << edge.to << ")" << endl;
 
-			if(!finish_dfs && !visited[edge.from])
+			if(!finish_dfs && !visited[edge.to]){
 				DFSVisit(edge.to, T, p);
+			}
 
 			else if(finish_dfs){
-				cout << "Adding edge" << endl;
 				p.addEdge(edge);
 				break;
 			}

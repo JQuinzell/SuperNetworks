@@ -3,6 +3,7 @@
 //Project 2
 
 #include <iostream>
+#include <string>
 #include <vector>
 #include <algorithm>
 #include "graph.h"
@@ -12,12 +13,18 @@
 using namespace std;
 
 Graph maxFlow(Graph& G, int S, int T);
-int MFV(Graph&G, int S, int T);
 Graph residualNet(Graph &G);
 bool pathExists(Graph &G, int S, int T);
 Edge findRevEdge(Edge sEdge, vector<Edge> edges);
 int minWeight(std::vector<Edge> e);
 bool findEdge(std::vector<Edge> e, Edge sEdge);
+
+/* Parses the passed file and creates a new output file. 
+ * This file ("adj_list.txt") holds # edges, # nodes, 
+ * and IDs of nodes on each connection
+ */
+void parser(const char* infile);
+
 
 int main()
 {
@@ -36,11 +43,6 @@ int main()
 	return 0;
 }
 
-int MFV(Graph&G, int S, int T){
-	
-	return G.max_flow;
-}
-
 Graph maxFlow(Graph& G, int S, int T)
 {
 	vector<vector<Edge>> nodes;
@@ -53,10 +55,12 @@ Graph maxFlow(Graph& G, int S, int T)
 	curr_path = Gf.list.calculatePath(S,T);
 	
 	while(!curr_path.edges.empty()){
+		cout << "go" << endl;
 		lf = Gf.list;
 		nodes = lf.vertices;
-		Gf.paths.push_back(curr_path);
+		G.paths.push_back(curr_path);
 		G.max_flow += curr_path.flow;
+		cout << G.max_flow << endl;
 		for(Edge curr_edge : curr_path.edges){
 			if (findEdge(lf.edges, curr_edge)){
 				curr_edge.flow = curr_edge.flow + curr_path.flow;
@@ -69,6 +73,7 @@ Graph maxFlow(Graph& G, int S, int T)
 		Gf = residualNet(Gf);
 		curr_path = Gf.list.calculatePath(S,T);			
 	}
+	cout << "end" << endl;
 	Gf.max_flow = G.max_flow;
 	return G;
 }
@@ -133,4 +138,41 @@ bool findEdge(std::vector<Edge> e, Edge sEdge){
 	return false;
 }
 
+void parser(const char* infile)
+{
+	ifstream kdl;
+	ofstream out;
+	string word;
+	int source, target, tot_edges = 0, tot_nodes = 0;
 
+	kdl.open(infile);
+
+	// Find total edges and nodes
+	while (kdl >> word)
+	{
+		if (word == "edge")
+			tot_edges++;
+		if (word == "node")
+			tot_nodes++;
+	}
+	kdl.close();
+
+	out.open("adj_list.txt");
+	kdl.open(infile);
+	out << tot_edges << " " << tot_nodes << endl;
+
+	// Search file for edges
+	while (kdl >> word);
+	{
+		if (word == "edge")
+		{
+			kdl >> word; kdl >> word; // ignore "[ source"
+			kdl >> source;
+			kdl >> word; // ignore "target"
+			kdl >> target;
+
+			out << source << " " << target << endl;
+		}
+	}
+	return;
+}
