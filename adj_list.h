@@ -10,10 +10,10 @@ using namespace std;
 
 class AdjacencyList
 {
-/*private:
-	std::vector<std::vector<Edge> > vertices;
-	std::vector<std::vector<std::vector<Path>>> pathways;
-	int num_vertices;*/
+private:
+	bool* visited;
+	int* parent;
+	bool finish_dfs;
 
 public:
 	std::vector<Edge*> edges;
@@ -70,24 +70,48 @@ public:
 	}
 	
 	void calculatePath(int S, int T){
-		Edge curr_edge;
-		vector<Edge> edges;
-		cout << "Here we go!" << endl;
+		Path path;
 
-		edges = vertices[S];
-		curr_edge = edges.back();
-		edges.pop_back();
-		cout << "mama mia!" << endl;
-		while(!edges.empty()){
-			if(isPath(curr_edge.to, T)){
-				Path p(S, T, curr_edge, vertices);
-				return;
-			}
+		//DFS
+
+		int size = vertices.size()
+		visited = new bool(size);
+		parent = new int(size);
+		finish_dfs = false;
+
+		for (int i = 0; i < size; ++i) {
+			visited[i] = false;
+			parent[i] = -1;
+		}
+
+		DFSVisit(S, T, path);
+
+		delete [] visited;
+		delete [] parent;
+
+		//END DFS
+
+		return path;
+	}
+
+	void DFSVisit(int node, int T, Path& p) {
+		visited[node] = true;
+
+		for(auto i = vertices[node].begin(); i != vertices[node].end(); ++i) {
+			Edge edge = *i;
+			parent[i.from] = node;
+
+			if(i.from == T)
+				finish_dfs = true;
+
+			if(!finish_dfs && !visited[i.from])
+				DFSVisit(edge.to);
+
 			else{
-				curr_edge = edges.back();
-				edges.pop_back();
-			}	
-		}	
+				p.addEdge(edge);
+				break;
+			}
+		}
 	}
 
 	void addEdge(Edge edge) {
