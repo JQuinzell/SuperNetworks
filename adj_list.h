@@ -99,12 +99,12 @@ public:
 
 		for(auto i = vertices[node].begin(); i != vertices[node].end(); ++i) {
 			Edge edge = *i;
-			parent[i.from] = node;
+			parent[edge.from] = node;
 
-			if(i.from == T)
+			if(edge.from == T)
 				finish_dfs = true;
 
-			if(!finish_dfs && !visited[i.from])
+			if(!finish_dfs && !visited[edge.from])
 				DFSVisit(edge.to, T, p);
 
 			else{
