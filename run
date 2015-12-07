@@ -1,3 +1,4 @@
 rm ./a.out
 clang++ main.cpp --std=c++11
+echo Running!
 ./a.out
