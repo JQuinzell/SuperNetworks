@@ -45,6 +45,7 @@ struct Edge
 		id = e.id;
 		weight = e.weight;
 		flow = e.flow;
+		repair_time = e.repair_time;
 		return *this;
 	}
 	
