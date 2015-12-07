@@ -25,8 +25,6 @@ class Path
 		}
 		
 		Path& operator=(const Path p){
-			from = p.from;
-			to = p.to;
 			flow = p.flow;
 			edges = p.edges;
 			return *this;
