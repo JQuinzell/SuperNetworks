@@ -52,6 +52,7 @@ Graph maxFlow(Graph& G, int S, int T)
 	int curr_node = S;
 
 	Graph Gf = residualNet(G);
+	Gf.print();
 	curr_path = Gf.list.calculatePath(S,T);
 	
 	while(!curr_path.edges.empty()){
@@ -162,7 +163,7 @@ void parser(const char* infile)
 	out << tot_edges << " " << tot_nodes << endl;
 
 	// Search file for edges
-	while (kdl >> word);
+	while (kdl >> word)
 	{
 		if (word == "edge")
 		{
