@@ -4,6 +4,7 @@
 #include <queue>
 #include "adj_list.h"
 #include "edge.h"
+using namespace std;
 
 class Graph
 {
@@ -29,6 +30,16 @@ public:
 	Graph(const Graph &G): list(G.size){
 		size = G.size;
 		max_flow = G.max_flow;
+	}
+
+	void print() {
+		cout << "Printing graph" << endl;
+		for(auto node : list.vertices){
+			for(Edge edge : node){
+				cout << "(" << edge.from << ", " << edge.to << ")" << endl;
+			}
+		}
+		cout << "---" << endl;
 	}
 	
 	void addEdge(Edge edge){
