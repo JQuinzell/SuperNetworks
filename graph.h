@@ -33,9 +33,14 @@ public:
 		size = n;
 	}
 	
-	Graph(const Graph &G): list(G.size){
+	Graph(const Graph &G):list(G.size)
+	{
 		size = G.size;
 		max_flow = G.max_flow;
+		paths = G.paths;
+		list = G.list;
+		S = G.S;
+		T = G.T;
 	}
 
 	void print(bool gf = false) {
@@ -83,10 +88,13 @@ public:
 		}
 	}
 
-	Graph& operator=(const Graph G){
+	Graph& operator=(const Graph &G){
 		list = G.list;
 		size = G.list.num_vertices;
 		visited = G.visited;
+		paths = G.paths;
+		S = G.S;
+		T = G.T;
 		return *this;
 	}
 

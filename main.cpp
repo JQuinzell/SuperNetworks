@@ -10,6 +10,7 @@
 #include "adj_list.h"
 #include "edge.h"
 #include "path.h"
+#include <queue>
 using namespace std;
 
 Graph maxFlow(Graph& G, int S, int T);
@@ -23,15 +24,18 @@ Graph residualNet(Graph &G);
 void parser(const char* infile);
 
 // Recovery algorithm that prioritizes high value paths
-queue<string> priorityRecovery(Graph G, int S, int T);
+void priorityRecovery(Graph&);
 
 int main()
 {
 	Graph G(4);
-	
+	Edge e = Edge(1, 2, 6);
+	e.failed = true;
+	e.repair_time = 10;
+
 	G.addEdge(Edge(0, 1, 5));
 	G.addEdge(Edge(0, 2, 7));
-	G.addEdge(Edge(1, 2, 6));
+	G.addEdge(e);
 	G.addEdge(Edge(1, 3, 8));
 	G.addEdge(Edge(2, 3, 9));
 
@@ -39,8 +43,10 @@ int main()
 	G.T = 3;
 	G.allPaths();
 
-	G = maxFlow(G, 0, 3);
-	cout << "Max Flow: " << G.max_flow << endl;
+	priorityRecovery(G);
+
+	// G = maxFlow(G, 0, 3);
+	// cout << "Max Flow: " << G.max_flow << endl;
 	
 	return 0;
 }
@@ -48,12 +54,12 @@ int main()
 Graph maxFlow(Graph& G, int S, int T){
 	Path curr_path;
 
-	cout << "Start Maxflow - Gf" << endl;
+	// cout << "Start Maxflow - Gf" << endl;
 	Graph Gf = residualNet(G);
 	// Gf.print(true);
 	curr_path = Gf.list.calculatePath(S,T);
 	
-	cout << "Start loop" << endl;
+	// cout << "Start loop" << endl;
 	while(!curr_path.edges.empty()){
 		// curr_path.print();
 
@@ -68,7 +74,7 @@ Graph maxFlow(Graph& G, int S, int T){
 		// Gf.print(true);
 		curr_path = Gf.list.calculatePath(S,T);			
 	}
-	cout << "end" << endl;
+	// cout << "end" << endl;
 	Gf.max_flow = G.max_flow;
 	return G;
 }
@@ -76,12 +82,12 @@ Graph maxFlow(Graph& G, int S, int T){
 int maxFlowVal(Graph& G, int S, int T){
 	Path curr_path;
 
-	cout << "Start Maxflow - Gf" << endl;
+	// cout << "Start Maxflow - Gf" << endl;
 	Graph Gf = residualNet(G);
 	// Gf.print(true);
 	curr_path = Gf.list.calculatePath(S,T);
 	
-	cout << "Start loop" << endl;
+	// cout << "Start loop" << endl;
 	while(!curr_path.edges.empty()){
 		// curr_path.print();
 
@@ -96,7 +102,7 @@ int maxFlowVal(Graph& G, int S, int T){
 		// Gf.print(true);
 		curr_path = Gf.list.calculatePath(S,T);			
 	}
-	cout << "end" << endl;
+	// cout << "end" << endl;
 	Gf.max_flow = G.max_flow;
 	return G.max_flow;
 }
@@ -164,10 +170,15 @@ void parser(const char* infile)
 	return;
 }
 
-queue<string> priorityRecovery(Graph& H, int S, int T)
+void priorityRecovery(Graph& H)
 {
-	int curr_flow = 0, time = 0, max_val = 0, work_time = 0;
+	int curr_flow = 0, time = 0, work_time = 0;
+	float max_val = 0;
+	vector<Path> allpaths;
+
 	Path selected;
+	int S = H.S;
+	int T = H.T;
 	queue<string> rec_q;
 	Graph M = maxFlow(H, S, T);
 	Graph curr(H.list.vertices.size());
@@ -177,7 +188,9 @@ queue<string> priorityRecovery(Graph& H, int S, int T)
 	// will iterate until C matches M
 	while (curr_flow < M.max_flow)
 	{
+		cout << "Reset" << endl;
 		Graph G = H; // H represents network. G modifiable version
+
 		// test all paths in max flow graph
 		while (!G.paths.empty())
 		{
@@ -196,7 +209,7 @@ queue<string> priorityRecovery(Graph& H, int S, int T)
 			// TODO: repair time of nodes?
 
 			// Compare value of flow over repair time
-			int value = (maxFlowVal(N, S, T) - maxFlowVal(curr, S, T)) / work_time;
+			float value = static_cast<float>(maxFlowVal(N, S, T) - maxFlowVal(curr, S, T)) / work_time;
 			if (max_val < value)
 			{
 				max_val = value;
@@ -243,6 +256,5 @@ queue<string> priorityRecovery(Graph& H, int S, int T)
 			rec_q.push(edge->id);
 		}
 	}
-	return rec_q;
 }
 
