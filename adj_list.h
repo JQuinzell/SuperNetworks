@@ -69,7 +69,7 @@ public:
 		infile.close();
 	}
 	
-	void calculatePath(int S, int T){
+	Path calculatePath(int S, int T){
 		Path path;
 
 		//DFS
