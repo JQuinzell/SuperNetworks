@@ -47,7 +47,6 @@ Graph maxFlow(Graph& G, int S, int T)
 	curr_path = Gf.list.calculatePath(S,T);
 	
 	while(!curr_path.edges.empty()){
-		cout << "go" << endl;
 		lf = Gf.list;
 		nodes = lf.vertices;
 		G.paths.push_back(curr_path);
