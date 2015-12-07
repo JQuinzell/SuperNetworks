@@ -150,7 +150,7 @@ void parser(const char* infile)
 	return;
 }
 
-queue<string> priorityRecovery(Graph H, int S, int T)
+queue<string> priorityRecovery(Graph& H, int S, int T)
 {
 	int curr_flow = 0, time = 0, max_val = 0, work_time = 0;
 	Path selected;
