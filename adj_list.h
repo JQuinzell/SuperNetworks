@@ -16,7 +16,7 @@ private:
 	bool finish_dfs;
 
 public:
-	std::vector<Edge*> edges;
+	std::vector<Edge> edges;
 	std::vector<std::vector<Edge> > vertices;
 	int num_vertices;
 
@@ -105,7 +105,7 @@ public:
 				finish_dfs = true;
 
 			if(!finish_dfs && !visited[i.from])
-				DFSVisit(edge.to);
+				DFSVisit(edge.to, T, p);
 
 			else{
 				p.addEdge(edge);
@@ -116,7 +116,7 @@ public:
 
 	void addEdge(Edge edge) {
 		vertices[edge.from].push_back(edge);
-		edges.push_back(&edge);
+		edges.push_back(edge);
 	}
 
  // int size() { return num_vertices; }

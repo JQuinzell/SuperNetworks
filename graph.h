@@ -7,11 +7,6 @@
 
 class Graph
 {
-/*private:
-	AdjacencyList list;
-	int size;
-	bool* visited;*/
-
 public:
 	int max_flow;
 	AdjacencyList list;
@@ -29,7 +24,6 @@ public:
 	Graph(int n): list(n) {
 		max_flow = 0;
 		size = n;
-		std::cout << "Got it" << std::endl;
 	}
 	
 	Graph(const Graph &G): list(G.size){
@@ -47,10 +41,6 @@ public:
 		visited = G.visited;
 		return *this;
 	}
-	
-	/*bool isVisited(){
-		return visited;
-	}*/
 
 	void BFSTraverse(int source) {
 		visited = new bool(size);

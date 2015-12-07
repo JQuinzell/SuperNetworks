@@ -27,10 +27,6 @@ int main()
 	G.addEdge(Edge(1, 2, 6));
 	G.addEdge(Edge(1, 3, 8));
 	G.addEdge(Edge(2, 3, 9));
-	
-	cout << G.list.vertices[0].back().weight << endl;
-	
-	cout << "maybe" << endl;
 
 	maxFlow(G, 0, 3);
 	cout << "Max Flow: " << G.max_flow << endl;
@@ -53,6 +49,7 @@ Graph maxFlow(Graph& G, int S, int T)
 		lf = Gf.list;
 		nodes = lf.vertices;
 		curr_path = Gf.list.calculatePath(S,T);
+		G.paths.push_back(curr_path);
 		curr_path_flow = minWeight(curr_path.edges);
 		G.max_flow += curr_path_flow;
 		for(Edge curr_edge : curr_path.edges){
@@ -81,10 +78,12 @@ Graph residualNet(Graph &G)
 			G.list.vertices[i].pop_back();
 			Edge residual(curr_edge.from, curr_edge.to, (curr_edge.weight - curr_edge.flow));
 			if(residual.weight != 0){
+				residual.flow = curr_edge.flow;
 				Gf.addEdge(residual);	
 			}
 			Edge flow(curr_edge.to, curr_edge.from, curr_edge.flow);
 			if(flow.weight != 0){
+				flow.flow = curr_edge.weight;
 				Gf.addEdge(flow);	
 			}
 		}
@@ -118,7 +117,7 @@ int minWeight(std::vector<Edge> e){
 	Edge min_edge = e.back();
 	
 	for(Edge curr_edge : e){
-		if (curr_edge->weight < min_edge.weight)
+		if (curr_edge.weight < min_edge.weight)
 			min_edge = curr_edge;
 	}
 	return min_edge.weight;
@@ -131,4 +130,5 @@ bool findEdge(std::vector<Edge> e, Edge sEdge){
 	}
 	return false;
 }
+
 
