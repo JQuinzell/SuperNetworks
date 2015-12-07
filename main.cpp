@@ -181,24 +181,24 @@ void parser(const char* infile)
 	return;
 }
 
-queue<string> priorityRecovery(Graph G, int S, int T)
+queue<string> priorityRecovery(Graph H, int S, int T)
 {
 	int curr_flow = 0, time = 0, max_val = 0, work_time = 0;
 	Path selected;
 	queue<string> rec_q;
-	Graph M = maxFlow(G, S, T);
-	Graph curr, N, H;
+	Graph M = maxFlow(H, S, T);
+	Graph curr, N, G; // Current graph, next graph, 
 
 	// will iterate until C matches M
 	while (curr_flow < M.max_flow)
 	{
-		Graph G = H;
+		Graph G = H; // H represents network. G modifiable version
 		// test all paths in max flow graph
 		while (!G.paths.empty())
 		{
-			// add path to test-graph
-			Path P = G.paths.back();
-			G.paths.pop_back();
+			N = curr;
+			Path P = G.paths.back(); // add path
+			G.paths.pop_back(); // remove from G
 			// Find work time required for path
 			for (Edge E : P.edges)
 			{
@@ -226,16 +226,17 @@ queue<string> priorityRecovery(Graph G, int S, int T)
 			{
 				curr.list.addEdge(E);
 				time += E.repair_time;
+				E.failed = false;
 				rec_q.push(E.id);
 			}
 		}
 
 		// TODO: recover nodes in selected path 
 		// for all nodes IN PATH
-		// if failing
-		// increment time
-		// set to working
-		// push to rec_q
+			// if failing
+			// increment time
+			// set to working
+			// push to rec_q
 		curr_flow = maxFlowVal(curr, S, T);
 	}
 	/*
@@ -245,6 +246,7 @@ queue<string> priorityRecovery(Graph G, int S, int T)
 	// if failing, recover
 	}
 	*/
+
 	// for all edges
 	for (int i = 0; i < H.list.vertices.size(); i++)
 	{
@@ -252,6 +254,7 @@ queue<string> priorityRecovery(Graph G, int S, int T)
 		{
 			curr.list.addEdge(*edge);
 			time += edge->repair_time;
+			edge->failed = false;
 			rec_q.push(edge->id);
 		}
 	}
