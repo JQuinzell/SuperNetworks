@@ -25,34 +25,6 @@ bool findEdge(std::vector<Edge> e, Edge sEdge);
  */
 void parser(const char* infile);
 
-=======
-//Brandon DeVille, Jared Rainwater, John Maruska
-//Algorithms 2500
-//Project 2
-
-#include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
-#include "graph.h"
-#include "adj_list.h"
-#include "edge.h"
-#include "path.h"
-using namespace std;
-
-Graph maxFlow(Graph& G, int S, int T);
-Graph residualNet(Graph &G);
-bool pathExists(Graph &G, int S, int T);
-Edge findRevEdge(Edge sEdge, vector<Edge> edges);
-int minWeight(std::vector<Edge> e);
-bool findEdge(std::vector<Edge> e, Edge sEdge);
-
-/* Parses the passed file and creates a new output file. 
- * This file ("adj_list.txt") holds # edges, # nodes, 
- * and IDs of nodes on each connection
- */
-void parser(const char* infile);
-
 // Recovery algorithm that prioritizes high value paths
 queue<string> priorityRecovery(Graph G, int S, int T);
 
