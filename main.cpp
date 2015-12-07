@@ -3,6 +3,7 @@
 //Project 2
 
 #include <iostream>
+#include <string>
 #include <vector>
 #include <algorithm>
 #include "graph.h"
@@ -17,6 +18,13 @@ bool pathExists(Graph &G, int S, int T);
 Edge findRevEdge(Edge sEdge, vector<Edge> edges);
 int minWeight(std::vector<Edge> e);
 bool findEdge(std::vector<Edge> e, Edge sEdge);
+
+/* Parses the passed file and creates a new output file. 
+ * This file ("adj_list.txt") holds # edges, # nodes, 
+ * and IDs of nodes on each connection
+ */
+void parser(const char* infile);
+
 
 int main()
 {
@@ -130,4 +138,41 @@ bool findEdge(std::vector<Edge> e, Edge sEdge){
 	return false;
 }
 
+void parser(const char* infile)
+{
+	ifstream kdl;
+	ofstream out;
+	string word;
+	int source, target, tot_edges = 0, tot_nodes = 0;
 
+	kdl.open(infile);
+
+	// Find total edges and nodes
+	while (kdl >> word)
+	{
+		if (word == "edge")
+			tot_edges++;
+		if (word == "node")
+			tot_nodes++;
+	}
+	kdl.close();
+
+	out.open("adj_list.txt");
+	kdl.open(infile);
+	out << tot_edges << " " << tot_nodes << endl;
+
+	// Search file for edges
+	while (kdl >> word);
+	{
+		if (word == "edge")
+		{
+			kdl >> word; kdl >> word; // ignore "[ source"
+			kdl >> source;
+			kdl >> word; // ignore "target"
+			kdl >> target;
+
+			out << source << " " << target << endl;
+		}
+	}
+	return;
+}
