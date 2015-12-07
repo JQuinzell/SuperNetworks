@@ -25,6 +25,36 @@ bool findEdge(std::vector<Edge> e, Edge sEdge);
  */
 void parser(const char* infile);
 
+=======
+//Brandon DeVille, Jared Rainwater, John Maruska
+//Algorithms 2500
+//Project 2
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include "graph.h"
+#include "adj_list.h"
+#include "edge.h"
+#include "path.h"
+using namespace std;
+
+Graph maxFlow(Graph& G, int S, int T);
+Graph residualNet(Graph &G);
+bool pathExists(Graph &G, int S, int T);
+Edge findRevEdge(Edge sEdge, vector<Edge> edges);
+int minWeight(std::vector<Edge> e);
+bool findEdge(std::vector<Edge> e, Edge sEdge);
+
+/* Parses the passed file and creates a new output file. 
+ * This file ("adj_list.txt") holds # edges, # nodes, 
+ * and IDs of nodes on each connection
+ */
+void parser(const char* infile);
+
+// Recovery algorithm that prioritizes high value paths
+queue<string> priorityRecovery(Graph G, int S, int T);
 
 int main()
 {
@@ -50,27 +80,26 @@ Graph maxFlow(Graph& G, int S, int T)
 	Edge rev_edge;
 	Path curr_path;
 	int curr_node = S;
+	int flow_change;
 
+	cout << "Start Maxflow - Gf" << endl;
 	Graph Gf = residualNet(G);
+	// Gf.print(true);
 	curr_path = Gf.list.calculatePath(S,T);
 	
+	cout << "Start loop" << endl;
 	while(!curr_path.edges.empty()){
-		cout << "go" << endl;
-		lf = Gf.list;
-		nodes = lf.vertices;
-		G.paths.push_back(curr_path);
-		G.max_flow += curr_path.flow;
-		cout << G.max_flow << endl;
+		// curr_path.print();
+
+		//update G
 		for(Edge curr_edge : curr_path.edges){
-			if (findEdge(lf.edges, curr_edge)){
-				curr_edge.flow = curr_edge.flow + curr_path.flow;
-			}
-			else{
-				rev_edge = findRevEdge(curr_edge, Gf.list.edges);
-				curr_edge.flow = rev_edge.flow - curr_path.flow;
-			}
+			G.augmentEdge(curr_edge, curr_path.flow);
 		}
-		Gf = residualNet(Gf);
+		G.max_flow += curr_path.flow;
+		
+		// G.print();
+		Gf = residualNet(G);
+		// Gf.print(true);
 		curr_path = Gf.list.calculatePath(S,T);			
 	}
 	cout << "end" << endl;
@@ -80,11 +109,12 @@ Graph maxFlow(Graph& G, int S, int T)
 	
 Graph residualNet(Graph &G)
 {
-	Graph Gf(G.list.num_vertices);
+	Graph Gf(G.list.vertices.size());
 	
 	for(auto node : G.list.vertices){
 		for(Edge curr_edge : node){
 			Edge residual(curr_edge.from, curr_edge.to, (curr_edge.weight - curr_edge.flow));
+			residual.residual = true;
 			if(residual.weight != 0){
 				residual.flow = curr_edge.flow;
 				Gf.addEdge(residual);	
@@ -240,7 +270,7 @@ queue<string> priorityRecovery(Graph G, int S, int T)
 	// TODO: recover nodes
 	for ( all nodes )
 	{
-		// if failing, recover
+	// if failing, recover
 	}
 	*/
 	// for all edges
@@ -255,3 +285,4 @@ queue<string> priorityRecovery(Graph G, int S, int T)
 	}
 	return rec_q;
 }
+

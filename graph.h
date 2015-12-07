@@ -4,6 +4,7 @@
 #include <queue>
 #include "adj_list.h"
 #include "edge.h"
+using namespace std;
 
 class Graph
 {
@@ -32,11 +33,48 @@ public:
 		size = G.size;
 		max_flow = G.max_flow;
 	}
+
+	void print(bool gf = false) {
+		cout << "Printing graph" << endl;
+		for(auto node : list.vertices){
+			for(Edge edge : node){
+				cout << "(" << edge.from << ", " << edge.to << ")";
+				if(gf){
+					cout << " -- Weight: " << edge.weight << endl;
+				} else {
+					cout << " -- flow: " << edge.flow << endl;
+				}
+			}
+		}
+		cout << "---" << endl;
+		cin.get();
+	}
 	
 	void addEdge(Edge edge){
 		list.addEdge(edge);
 	}
 	
+	void augmentEdge(Edge& edge, int val) {
+		//find matching edge
+		bool found = false;
+
+		for(int i = 0; i < list.vertices.size(); ++i){
+			if(!found)
+			for(auto curr_edge = list.vertices[i].begin(); curr_edge != list.vertices[i].end(); ++curr_edge){
+				if(*curr_edge == edge){
+					//augment
+					if(edge.residual){
+						curr_edge->flow += val;
+					} else {
+						curr_edge->flow -= val;
+					}
+					found = true;
+					break;
+				}
+			}
+		}
+	}
+
 	Graph& operator=(const Graph G){
 		list = G.list;
 		size = G.list.num_vertices;

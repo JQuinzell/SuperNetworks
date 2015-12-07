@@ -1,5 +1,8 @@
 #ifndef edge_h
 #define edge_h
+#include <iostream>
+#include <random>
+using namespace std;
 
 #include <string>
 
@@ -12,15 +15,18 @@ struct Edge
 	int weight;
 	string id;
 	int flow;
-	bool failed;
 	int repair_time;
+	bool failed;
+	bool residual;
 
 	Edge(int u, int v, int w) {
 		from = u;
 		to = v;
 		weight = w;
 		flow = 0;
+		repair_time = (rand()%100)+1;
 		failed = false;
+		residual = false;
 	}
 	
 	Edge() {
@@ -28,7 +34,13 @@ struct Edge
 		to = 0;
 		weight = 0;
 		flow = 0;
+		repair_time = (rand()%100)+1;
 		failed = false;
+		residual = false;
+	}
+
+	void print() {
+		cout << "(" << from << ", " << to << ")" << endl;
 	}
 	
 	Edge& operator=(const Edge e) {
@@ -46,7 +58,7 @@ struct Edge
  	}
  	
  	bool operator==(const Edge e){
- 		return(id == e.id);
+ 		return((from == e.from) && (to == e.to));
 	 }
 };
 
