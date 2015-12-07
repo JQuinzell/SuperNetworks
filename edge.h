@@ -8,14 +8,15 @@ struct Edge
 	int weight;
 	int id;
 	int flow;
-	bool inPath;
+	bool failed;
+	int repair_time;
 
 	Edge(int u, int v, int w) {
 		from = u;
 		to = v;
 		weight = w;
 		flow = 0;
-		inPath = false;
+		failed = false;
 	}
 	
 	Edge() {
@@ -23,7 +24,7 @@ struct Edge
 		to = 0;
 		weight = 0;
 		flow = 0;
-		inPath = false;
+		failed = false;
 	}
 	
 	Edge& operator=(const Edge e) {
@@ -32,6 +33,7 @@ struct Edge
 		id = e.id;
 		weight = e.weight;
 		flow = e.flow;
+		repair_time = e.repair_time;
 		return *this;
 	}
 	

@@ -12,6 +12,7 @@
 using namespace std;
 
 Graph maxFlow(Graph& G, int S, int T);
+int MFV(Graph&G, int S, int T);
 Graph residualNet(Graph &G);
 bool pathExists(Graph &G, int S, int T);
 Edge findRevEdge(Edge sEdge, vector<Edge> edges);
@@ -35,6 +36,11 @@ int main()
 	return 0;
 }
 
+int MFV(Graph&G, int S, int T){
+	
+	return G.max_flow;
+}
+
 Graph maxFlow(Graph& G, int S, int T)
 {
 	vector<vector<Edge>> nodes;
@@ -47,12 +53,10 @@ Graph maxFlow(Graph& G, int S, int T)
 	curr_path = Gf.list.calculatePath(S,T);
 	
 	while(!curr_path.edges.empty()){
-		cout << "go" << endl;
 		lf = Gf.list;
 		nodes = lf.vertices;
-		G.paths.push_back(curr_path);
+		Gf.paths.push_back(curr_path);
 		G.max_flow += curr_path.flow;
-		cout << G.max_flow << endl;
 		for(Edge curr_edge : curr_path.edges){
 			if (findEdge(lf.edges, curr_edge)){
 				curr_edge.flow = curr_edge.flow + curr_path.flow;
@@ -65,7 +69,6 @@ Graph maxFlow(Graph& G, int S, int T)
 		Gf = residualNet(Gf);
 		curr_path = Gf.list.calculatePath(S,T);			
 	}
-	cout << "end" << endl;
 	Gf.max_flow = G.max_flow;
 	return G;
 }
