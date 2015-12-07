@@ -108,6 +108,7 @@ public:
 				DFSVisit(edge.to, T, p);
 
 			else if(finish_dfs){
+				cout << "Adding edge" << endl;
 				p.addEdge(edge);
 				break;
 			}
