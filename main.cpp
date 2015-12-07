@@ -25,8 +25,6 @@ bool findEdge(std::vector<Edge> e, Edge sEdge);
  */
 void parser(const char* infile);
 
-int wait;
-
 int main()
 {
 	Graph G(4);
@@ -53,38 +51,24 @@ Graph maxFlow(Graph& G, int S, int T)
 	int curr_node = S;
 	int flow_change;
 
+	cout << "Start Maxflow - Gf" << endl;
 	Graph Gf = residualNet(G);
-	Gf.print();
+	// Gf.print(true);
 	curr_path = Gf.list.calculatePath(S,T);
-	curr_path.print();
 	
+	cout << "Start loop" << endl;
 	while(!curr_path.edges.empty()){
 		flow_change = curr_path.flow;
+		// curr_path.print();
+
 		//update G
-		for(auto node : Gf.list.vertices){
-				for(Edge curr_edge : node){
-					G.augmentEdge(curr_edge, flow_change);
-			}
+		for(Edge curr_edge : curr_path.edges){
+			G.augmentEdge(curr_edge, flow_change);
 		}
-		G.print();
-		// cout << "go" << endl;
-		// lf = Gf.list;
-		// nodes = lf.vertices;
-		// G.paths.push_back(curr_path);
-		// G.max_flow += curr_path.flow;
-		// cout << G.max_flow << endl;
-		// for(Edge curr_edge : curr_path.edges){
-		// 	if (findEdge(lf.edges, curr_edge)){
-		// 		curr_edge.flow = curr_edge.flow + curr_path.flow;
-		// 	}
-		// 	else{
-		// 		rev_edge = findRevEdge(curr_edge, Gf.list.edges);
-		// 		curr_edge.flow = rev_edge.flow - curr_path.flow;
-		// 	}
-		// }
-		// Gf = residualNet(Gf);
-		// Gf.print();
-		// curr_path = Gf.list.calculatePath(S,T);			
+		// G.print();
+		Gf = residualNet(G);
+		// Gf.print(true);
+		curr_path = Gf.list.calculatePath(S,T);			
 	}
 	cout << "end" << endl;
 	Gf.max_flow = G.max_flow;
@@ -110,7 +94,6 @@ Graph residualNet(Graph &G)
 			}
 		}
 	}
-	Gf.print();
 	return Gf;
 }
 	

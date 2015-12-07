@@ -1,6 +1,7 @@
 #ifndef edge_h
 #define edge_h
 #include <iostream>
+#include <random>
 using namespace std;
 
 struct Edge
@@ -10,7 +11,8 @@ struct Edge
 	int weight;
 	int id;
 	int flow;
-	bool inPath;
+	int repair_time;
+	bool failed;
 	bool residual;
 
 	Edge(int u, int v, int w) {
@@ -18,7 +20,8 @@ struct Edge
 		to = v;
 		weight = w;
 		flow = 0;
-		inPath = false;
+		repair_time = (rand()%100)+1;
+		failed = false;
 		residual = false;
 	}
 	
@@ -27,7 +30,8 @@ struct Edge
 		to = 0;
 		weight = 0;
 		flow = 0;
-		inPath = false;
+		repair_time = (rand()%100)+1;
+		failed = false;
 		residual = false;
 	}
 
@@ -49,7 +53,7 @@ struct Edge
  	}
  	
  	bool operator==(const Edge e){
- 		return(from == e.from && to == e.to);
+ 		return((from == e.from) && (to == e.to));
 	 }
 };
 
