@@ -13,7 +13,7 @@ class Path
 		std::vector<Edge> edges;
 		
 		Path(){
-	 		flow = MAX_INT;
+	 		flow = INT_MAX;
 		}
 
 		void addEdge(Edge edge){
