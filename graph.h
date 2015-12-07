@@ -40,12 +40,34 @@ public:
 			}
 		}
 		cout << "---" << endl;
+		cin.get();
 	}
 	
 	void addEdge(Edge edge){
 		list.addEdge(edge);
 	}
 	
+	void augmentEdge(Edge& edge, int val) {
+		//find matching edge
+		Edge* match = nullptr;
+		edge.print();
+		for(auto node : list.vertices){
+			if(match == nullptr)
+			for(Edge curr_edge : node){
+				curr_edge.print();
+				if(curr_edge == edge) *match = curr_edge;
+			}
+		}
+
+		cout << "aug" << endl;
+		//augment
+		if(edge.residual){
+			match->flow += val;
+		} else {
+			match->flow -= val;
+		}
+	}
+
 	Graph& operator=(const Graph G){
 		list = G.list;
 		size = G.list.num_vertices;

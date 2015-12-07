@@ -25,6 +25,7 @@ bool findEdge(std::vector<Edge> e, Edge sEdge);
  */
 void parser(const char* infile);
 
+int wait;
 
 int main()
 {
@@ -50,29 +51,40 @@ Graph maxFlow(Graph& G, int S, int T)
 	Edge rev_edge;
 	Path curr_path;
 	int curr_node = S;
+	int flow_change;
 
 	Graph Gf = residualNet(G);
 	Gf.print();
 	curr_path = Gf.list.calculatePath(S,T);
+	curr_path.print();
 	
 	while(!curr_path.edges.empty()){
-		cout << "go" << endl;
-		lf = Gf.list;
-		nodes = lf.vertices;
-		G.paths.push_back(curr_path);
-		G.max_flow += curr_path.flow;
-		cout << G.max_flow << endl;
-		for(Edge curr_edge : curr_path.edges){
-			if (findEdge(lf.edges, curr_edge)){
-				curr_edge.flow = curr_edge.flow + curr_path.flow;
-			}
-			else{
-				rev_edge = findRevEdge(curr_edge, Gf.list.edges);
-				curr_edge.flow = rev_edge.flow - curr_path.flow;
+		flow_change = curr_path.flow;
+		//update G
+		for(auto node : Gf.list.vertices){
+				for(Edge curr_edge : node){
+					G.augmentEdge(curr_edge, flow_change);
 			}
 		}
-		Gf = residualNet(Gf);
-		curr_path = Gf.list.calculatePath(S,T);			
+		G.print();
+		// cout << "go" << endl;
+		// lf = Gf.list;
+		// nodes = lf.vertices;
+		// G.paths.push_back(curr_path);
+		// G.max_flow += curr_path.flow;
+		// cout << G.max_flow << endl;
+		// for(Edge curr_edge : curr_path.edges){
+		// 	if (findEdge(lf.edges, curr_edge)){
+		// 		curr_edge.flow = curr_edge.flow + curr_path.flow;
+		// 	}
+		// 	else{
+		// 		rev_edge = findRevEdge(curr_edge, Gf.list.edges);
+		// 		curr_edge.flow = rev_edge.flow - curr_path.flow;
+		// 	}
+		// }
+		// Gf = residualNet(Gf);
+		// Gf.print();
+		// curr_path = Gf.list.calculatePath(S,T);			
 	}
 	cout << "end" << endl;
 	Gf.max_flow = G.max_flow;
@@ -81,11 +93,12 @@ Graph maxFlow(Graph& G, int S, int T)
 	
 Graph residualNet(Graph &G)
 {
-	Graph Gf(G.list.num_vertices);
+	Graph Gf(G.list.vertices.size());
 	
 	for(auto node : G.list.vertices){
 		for(Edge curr_edge : node){
 			Edge residual(curr_edge.from, curr_edge.to, (curr_edge.weight - curr_edge.flow));
+			residual.residual = true;
 			if(residual.weight != 0){
 				residual.flow = curr_edge.flow;
 				Gf.addEdge(residual);	
@@ -97,6 +110,7 @@ Graph residualNet(Graph &G)
 			}
 		}
 	}
+	Gf.print();
 	return Gf;
 }
 	

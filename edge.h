@@ -1,5 +1,7 @@
 #ifndef edge_h
 #define edge_h
+#include <iostream>
+using namespace std;
 
 struct Edge
 {
@@ -9,6 +11,7 @@ struct Edge
 	int id;
 	int flow;
 	bool inPath;
+	bool residual;
 
 	Edge(int u, int v, int w) {
 		from = u;
@@ -16,6 +19,7 @@ struct Edge
 		weight = w;
 		flow = 0;
 		inPath = false;
+		residual = false;
 	}
 	
 	Edge() {
@@ -24,6 +28,11 @@ struct Edge
 		weight = 0;
 		flow = 0;
 		inPath = false;
+		residual = false;
+	}
+
+	void print() {
+		cout << "(" << from << ", " << to << ")" << endl;
 	}
 	
 	Edge& operator=(const Edge e) {
@@ -40,7 +49,7 @@ struct Edge
  	}
  	
  	bool operator==(const Edge e){
- 		return(id == e.id);
+ 		return(from == e.from && to == e.to);
 	 }
 };
 

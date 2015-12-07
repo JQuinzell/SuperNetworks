@@ -30,6 +30,16 @@ class Path
 			edges = p.edges;
 			return *this;
 		}
+
+		void print(){
+			cout << "Flow: " << flow << endl;
+			for (std::vector<Edge>::reverse_iterator i = edges.rbegin(); i != edges.rend(); ++i)
+			{
+				Edge e = *i;
+				cout << e.from << " -> " << e.to << " | ";
+			}
+			cout << endl;
+		}
 };
 
 #endif
