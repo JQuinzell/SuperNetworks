@@ -58,13 +58,14 @@ Graph maxFlow(Graph& G, int S, int T)
 	
 	cout << "Start loop" << endl;
 	while(!curr_path.edges.empty()){
-		flow_change = curr_path.flow;
 		// curr_path.print();
 
 		//update G
 		for(Edge curr_edge : curr_path.edges){
-			G.augmentEdge(curr_edge, flow_change);
+			G.augmentEdge(curr_edge, curr_path.flow);
 		}
+		G.max_flow += curr_path.flow;
+		
 		// G.print();
 		Gf = residualNet(G);
 		// Gf.print(true);
