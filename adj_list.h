@@ -74,7 +74,7 @@ public:
 
 		//DFS
 
-		int size = vertices.size()
+		int size = vertices.size();
 		visited = new bool(size);
 		parent = new int(size);
 		finish_dfs = false;
