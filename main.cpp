@@ -15,10 +15,6 @@ using namespace std;
 Graph maxFlow(Graph& G, int S, int T);
 int maxFlowVal(Graph& G, int S, int T);
 Graph residualNet(Graph &G);
-bool pathExists(Graph &G, int S, int T);
-Edge findRevEdge(Edge sEdge, vector<Edge> edges);
-int minWeight(std::vector<Edge> e);
-bool findEdge(std::vector<Edge> e, Edge sEdge);
 
 /* Parses the passed file and creates a new output file. 
  * This file ("adj_list.txt") holds # edges, # nodes, 
@@ -107,13 +103,13 @@ Graph residualNet(Graph &G)
 	
 	for(auto node : G.list.vertices){
 		for(Edge curr_edge : node){
-			Edge residual(curr_edge.from, curr_edge.to, (curr_edge.weight - curr_edge.flow));
+			Edge residual(curr_edge.from.id, curr_edge.to.id, (curr_edge.weight - curr_edge.flow));
 			residual.residual = true;
 			if(residual.weight != 0){
 				residual.flow = curr_edge.flow;
 				Gf.addEdge(residual);	
 			}
-			Edge flow(curr_edge.to, curr_edge.from, curr_edge.flow);
+			Edge flow(curr_edge.to.id, curr_edge.from.id, curr_edge.flow);
 			if(flow.weight != 0){
 				flow.flow = curr_edge.weight;
 				Gf.addEdge(flow);	
@@ -148,7 +144,7 @@ void parser(const char* infile)
 	out << tot_edges << " " << tot_nodes << endl;
 
 	// Search file for edges
-	while (kdl >> word);
+	while (kdl >> word)
 	{
 		if (word == "edge")
 		{
@@ -164,24 +160,26 @@ void parser(const char* infile)
 	return;
 }
 
-queue<string> priorityRecovery(Graph G, int S, int T)
+queue<string> priorityRecovery(Graph H, int S, int T)
 {
 	int curr_flow = 0, time = 0, max_val = 0, work_time = 0;
 	Path selected;
 	queue<string> rec_q;
-	Graph M = maxFlow(G, S, T);
-	Graph curr, N, H;
+	Graph M = maxFlow(H, S, T);
+	Graph curr(H.list.vertices.size());
+	Graph N(H.list.vertices.size()); 
+	Graph G(H.list.vertices.size()); // Current graph, next graph, 
 
 	// will iterate until C matches M
 	while (curr_flow < M.max_flow)
 	{
-		Graph G = H;
+		Graph G = H; // H represents network. G modifiable version
 		// test all paths in max flow graph
 		while (!G.paths.empty())
 		{
-			// add path to test-graph
-			Path P = G.paths.back();
-			G.paths.pop_back();
+			N = curr;
+			Path P = G.paths.back(); // add path
+			G.paths.pop_back(); // remove from G
 			// Find work time required for path
 			for (Edge E : P.edges)
 			{
@@ -209,16 +207,17 @@ queue<string> priorityRecovery(Graph G, int S, int T)
 			{
 				curr.list.addEdge(E);
 				time += E.repair_time;
+				E.failed = false;
 				rec_q.push(E.id);
 			}
 		}
 
 		// TODO: recover nodes in selected path 
 		// for all nodes IN PATH
-		// if failing
-		// increment time
-		// set to working
-		// push to rec_q
+			// if failing
+			// increment time
+			// set to working
+			// push to rec_q
 		curr_flow = maxFlowVal(curr, S, T);
 	}
 	/*
@@ -228,6 +227,7 @@ queue<string> priorityRecovery(Graph G, int S, int T)
 	// if failing, recover
 	}
 	*/
+
 	// for all edges
 	for (int i = 0; i < H.list.vertices.size(); i++)
 	{
@@ -235,6 +235,7 @@ queue<string> priorityRecovery(Graph G, int S, int T)
 		{
 			curr.list.addEdge(*edge);
 			time += edge->repair_time;
+			edge->failed = false;
 			rec_q.push(edge->id);
 		}
 	}

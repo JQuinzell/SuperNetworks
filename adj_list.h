@@ -71,7 +71,7 @@ public:
 			weight = (rand()%10)+1;
 			infile >> from;
 			infile >> to;
-			Edge edge = Edge(Node[from], Node[to], weight);
+			Edge edge = Edge(from, to, weight);
 			addEdge(edge);
 		}
 
@@ -108,14 +108,14 @@ public:
 
 		for(auto i = vertices[node].begin(); i != vertices[node].end(); ++i) {
 			Edge edge = *i;
-			parent[edge.from] = node;
+			parent[edge.from.id] = node;
 
-			if(edge.to == T){
+			if(edge.to.id == T){
 				finish_dfs = true;
 			}
 
-			if(!finish_dfs && !visited[edge.to]){
-				DFSVisit(edge.to, T, p);
+			if(!finish_dfs && !visited[edge.to.id]){
+				DFSVisit(edge.to.id, T, p);
 			}
 
 			if(finish_dfs){
@@ -126,7 +126,7 @@ public:
 	}
 
 	void addEdge(Edge edge) {
-		vertices[edge.from].push_back(edge);
+		vertices[edge.from.id].push_back(edge);
 		edges.push_back(edge);
 	}
 

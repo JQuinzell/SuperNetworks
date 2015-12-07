@@ -38,7 +38,7 @@ public:
 		cout << "Printing graph" << endl;
 		for(auto node : list.vertices){
 			for(Edge edge : node){
-				cout << "(" << edge.from << ", " << edge.to << ")";
+				cout << "(" << edge.from.id << ", " << edge.to.id << ")";
 				if(gf){
 					cout << " -- Weight: " << edge.weight << endl;
 				} else {
@@ -102,10 +102,10 @@ public:
 			for (auto i = list[curr].begin(); i != list[curr].end(); ++i)
 			{
 				Edge edge = *i;
-				if(!visited[edge.to]) {
+				if(!visited[edge.to.id]) {
 					BFSProcessEdge(edge);
-					visited[edge.to] = true;
-					q.push(edge.to);
+					visited[edge.to.id] = true;
+					q.push(edge.to.id);
 				}
 			}
 
@@ -143,7 +143,7 @@ public:
 		for(auto i = list[node].begin(); i != list[node].end(); ++i) {
 			Edge edge = *i;
 			DFSProcessEdge(edge);
-			DFSVisit(edge.to);
+			DFSVisit(edge.to.id);
 		}
 
 		DFSPostprocessNode(node);

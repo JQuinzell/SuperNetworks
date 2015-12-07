@@ -1,6 +1,7 @@
 #ifndef edge_h
 #define edge_h
 #include <iostream>
+#include <climits>
 #include <random>
 #include <string>
 using namespace std;
@@ -18,7 +19,7 @@ struct Node
 	}
 	
 	Node(){
-		id = (-INT_MAX);
+		id = INT_MIN;
 		repair_time = (rand()%100)+1;
 		failed = false;
 	}
@@ -46,9 +47,9 @@ struct Edge
 	bool failed;
 	bool residual;
 
-	Edge(Node u, Node v, int w) {
-		from = u;
-		to = v;
+	Edge(int u, int v, int w) {
+		from.id = u;
+		to.id = v;
 		weight = w;
 		flow = 0;
 		repair_time = (rand()%100)+1;
@@ -65,7 +66,7 @@ struct Edge
 	}
 
 	void print() {
-		cout << "(" << from << ", " << to << ")" << endl;
+		cout << "(" << from.id << ", " << to.id << ")" << endl;
 	}
 	
 	Edge& operator=(const Edge e) {
