@@ -2,6 +2,7 @@
 #define graph_h
 
 #include <queue>
+#include <vector>
 #include "adj_list.h"
 #include "edge.h"
 using namespace std;
@@ -13,7 +14,10 @@ public:
 	AdjacencyList list;
 	int size;
 	bool* visited;
+	vector<Edge> parent;
 	vector<Path> paths;
+	int S;
+	int T;
 	
 	Graph(const char* filename):
 		list(filename)
@@ -52,6 +56,10 @@ public:
 	
 	void addEdge(Edge edge){
 		list.addEdge(edge);
+	}
+
+	void allPaths() {
+		DFSTraverse(S);
 	}
 	
 	void augmentEdge(Edge& edge, int val) {
@@ -125,10 +133,11 @@ public:
 
 	void DFSTraverse(int source) {
 		visited = new bool(size);
-		for (int i = 0; i < size; ++i)
+		parent = vector<Edge>(size);
+		for (int i = 0; i < size; ++i){
 			visited[i] = false;
+		}
 
-		DFSStart();
 		DFSVisit(source);
 		DFSEnd();
 
@@ -137,22 +146,34 @@ public:
 	}
 
 	void DFSVisit(int node) {
-		DFSPreprocessNode(node);
 		visited[node] = true;
+
+		//construct path and add if it is T
+		int cur_node = node;
+		Edge cur_edge;
+		Path p;
+		if(node == T){
+			// cout << "Solution" << endl;
+			while(cur_node != S){
+				// cout << cur_node << endl;
+				cur_edge = parent[cur_node];
+				p.edges.push_front(cur_edge);
+				cur_node = cur_edge.from.id;
+			}
+			paths.push_back(p);
+			return;
+		}
 
 		for(auto i = list[node].begin(); i != list[node].end(); ++i) {
 			Edge edge = *i;
-			DFSProcessEdge(edge);
+			// edge.print();
+			parent[edge.to.id] = edge;
 			DFSVisit(edge.to.id);
 		}
 
-		DFSPostprocessNode(node);
+		// cout << "Done" << endl;
 	}
 
-	virtual void DFSStart() {}
-	virtual void DFSPreprocessNode(int n) {}
-	virtual void DFSProcessEdge(Edge& edge) {}
-	virtual void DFSPostprocessNode(int n) {}
 	virtual void DFSEnd() {}	
 };
 

@@ -5,20 +5,21 @@
 #include <iostream>
 #include <climits>
 #include "edge.h"
+#include <list>
 using namespace std;
 
 class Path
 {
 	public:
 		int flow;
-		std::vector<Edge> edges;
+		list<Edge> edges;
 		
 		Path(){
 	 		flow = INT_MAX;
 		}
 
 		void addEdge(Edge edge){
-			edges.push_back(edge);
+			edges.push_front(edge);
 			int w = edge.weight;
 			if(w < flow) {
 				flow = w;
@@ -33,7 +34,7 @@ class Path
 
 		void print(){
 			cout << "Flow: " << flow << endl;
-			for (std::vector<Edge>::reverse_iterator i = edges.rbegin(); i != edges.rend(); ++i)
+			for (auto i = edges.begin(); i != edges.end(); ++i)
 			{
 				Edge e = *i;
 				cout << e.from.id << " -> " << e.to.id << " | ";

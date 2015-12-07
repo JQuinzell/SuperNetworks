@@ -35,6 +35,10 @@ int main()
 	G.addEdge(Edge(1, 3, 8));
 	G.addEdge(Edge(2, 3, 9));
 
+	G.S = 0;
+	G.T = 3;
+	G.allPaths();
+
 	G = maxFlow(G, 0, 3);
 	cout << "Max Flow: " << G.max_flow << endl;
 	
