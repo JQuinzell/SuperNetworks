@@ -62,7 +62,6 @@ public:
 			infile >> from;
 			infile >> to;
 			Edge edge = Edge(from, to, weight);
-			edge.id = id++;
 			addEdge(edge);
 		}
 

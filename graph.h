@@ -20,6 +20,8 @@ public:
 		size = list.num_vertices;
 		max_flow = 0;
 	}
+
+	Graph();
 	
 	Graph(int n): list(n) {
 		max_flow = 0;

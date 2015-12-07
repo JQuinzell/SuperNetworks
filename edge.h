@@ -1,12 +1,16 @@
 #ifndef edge_h
 #define edge_h
 
+#include <string>
+
+using namespace std;
+
 struct Edge
 {
 	int from;
 	int to;
 	int weight;
-	int id;
+	string id;
 	int flow;
 	bool failed;
 	int repair_time;

@@ -143,6 +143,7 @@ void parser(const char* infile)
 	ifstream kdl;
 	ofstream out;
 	string word;
+	string id;
 	int source, target, tot_edges = 0, tot_nodes = 0;
 
 	kdl.open(infile);
@@ -170,9 +171,87 @@ void parser(const char* infile)
 			kdl >> source;
 			kdl >> word; // ignore "target"
 			kdl >> target;
-
+			kdl >> word; // ignore id
+			kdl >> id;
 			out << source << " " << target << endl;
 		}
 	}
 	return;
+}
+
+queue<string> priorityRecovery(Graph G, int S, int T)
+{
+	int curr_flow = 0, time = 0, max_val = 0, work_time = 0;
+	Path selected;
+	queue<string> rec_q;
+	Graph M = maxFlow(G, S, T);
+	Graph curr, N, H;
+
+	// will iterate until C matches M
+	while (curr_flow < M.max_flow)
+	{
+		Graph G = H;
+		// test all paths in max flow graph
+		while (!G.paths.empty())
+		{
+			// add path to test-graph
+			Path P = G.paths.back();
+			G.paths.pop_back();
+			// Find work time required for path
+			for (Edge E : P.edges)
+			{
+				if (E.failed)
+				{
+					N.list.addEdge(E);
+					work_time += E.repair_time;
+				}
+			}
+			// TODO: repair time of nodes?
+
+			// Compare value of flow over repair time
+			int value = maxFlowVal(N, S, T) - maxFlowVal(curr, S, T) / work_time;
+			if (max_val < value)
+			{
+				max_val = value;
+				selected = P;
+			}
+		}
+
+		// recover selected path
+		for (Edge E : selected.edges)
+		{
+			if (E.failed)
+			{
+				curr.list.addEdge(E);
+				time += E.repair_time;
+				rec_q.push(E.id);
+			}
+		}
+
+		// TODO: recover nodes in selected path 
+		// for all nodes IN PATH
+		// if failing
+		// increment time
+		// set to working
+		// push to rec_q
+		curr_flow = maxFlowVal(curr, S, T);
+	}
+	/*
+	// TODO: recover nodes
+	for ( all nodes )
+	{
+		// if failing, recover
+	}
+	*/
+	// for all edges
+	for (int i = 0; i < H.list.vertices.size(); i++)
+	{
+		for (auto edge = H.list.vertices[i].begin(); edge != H.list.vertices[i].end(); edge++)
+		{
+			curr.list.addEdge(*edge);
+			time += edge->repair_time;
+			rec_q.push(edge->id);
+		}
+	}
+	return rec_q;
 }
